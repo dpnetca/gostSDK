@@ -2,20 +2,8 @@ package agents
 
 import (
 	"encoding/json"
-	"fmt"
-	"io"
-	"net/http"
-
-	"github.com/dpnetca/gostSDK/internal/client"
 )
 
-type AgentClient struct {
-	client *client.STClient
-}
-
-type AgentReponse struct {
-	Agent Agent `json:"data"`
-}
 type Agent struct {
 	AccountId       string `json:"accountId,omitempty"`
 	Symbol          string `json:"symbol,omitempty"`
@@ -25,28 +13,15 @@ type Agent struct {
 	ShipCount       int32  `json:"shipCount,omitempty"`
 }
 
-func NewAgentClient(client *client.STClient) *AgentClient {
-	return &AgentClient{client: client}
+type AgentReponse struct {
+	Agent Agent `json:"data"`
 }
 
-func (a *AgentClient) GetAgent() (*Agent, error) {
-	url := a.client.Base_url + "/my/agent"
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+func (c *Client) GetAgent() (*Agent, error) {
+	url := c.client.Base_url + "/my/agent"
+	data, err := c.sendGetRequest(url)
 	if err != nil {
 		return nil, err
-	}
-	res, err := a.client.SendWithAuth(req)
-	if err != nil {
-		return nil, err
-	}
-
-	data, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	if res.StatusCode > 299 {
-		return nil, fmt.Errorf("%s", data)
 	}
 
 	var agentResponse AgentReponse

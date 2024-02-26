@@ -10,23 +10,27 @@ import (
 	"github.com/dpnetca/gostSDK/internal/agents"
 	"github.com/dpnetca/gostSDK/internal/client"
 	"github.com/dpnetca/gostSDK/internal/fleet"
+	"github.com/dpnetca/gostSDK/internal/system"
 )
 
 type SpaceTrader struct {
-	STClient     *client.STClient
-	AgentsClient *agents.AgentClient
-	FleetClient  *fleet.FleetClient
+	Client *client.Client
+	Agents *agents.Client
+	Fleet  *fleet.Client
+	System *system.Client
 }
 
 func NewSpaceTrader(token string) *SpaceTrader {
-	client := client.NewClient(token)
-	agentsClient := agents.NewAgentClient(client)
-	fleetClient := fleet.NewFleetClient(client)
+	client := client.New(token)
+	agent := agents.New(client)
+	fleet := fleet.New(client)
+	system := system.New(client)
 
 	return &SpaceTrader{
-		STClient:     client,
-		AgentsClient: agentsClient,
-		FleetClient:  fleetClient,
+		Client: client,
+		Agents: agent,
+		Fleet:  fleet,
+		System: system,
 	}
 }
 
@@ -48,8 +52,8 @@ type StatusStats struct {
 // Return the status of the game server. This also includes a few global elements, such as announcements, server reset dates and leaderboards.
 func (s SpaceTrader) GetStatus() (*Status, error) {
 
-	req, _ := http.NewRequest("GET", s.STClient.Base_url, nil)
-	res, err := s.STClient.Send(req)
+	req, _ := http.NewRequest("GET", s.Client.Base_url, nil)
+	res, err := s.Client.Send(req)
 	if err != nil {
 		return nil, err
 	}
@@ -94,12 +98,12 @@ func (s SpaceTrader) RegisterNewAgent(faction, symbol, email string) (*NewAgent,
 	if err != nil {
 		return nil, err
 	}
-	url := s.STClient.Base_url + "/register"
+	url := s.Client.Base_url + "/register"
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
-	res, err := s.STClient.Send(req)
+	res, err := s.Client.Send(req)
 	if err != nil {
 		return nil, err
 	}
