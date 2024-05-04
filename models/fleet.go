@@ -72,7 +72,7 @@ type ShipReactor struct {
 	Condition    int          `json:"condition"`
 	Integrity    int          `json:"integrity"`
 	PowerOutput  int          `json:"powerOutput"`
-	Requirements Requirements `json:"requirements"`
+	Requirements ShipRequirements `json:"requirements"`
 }
 type ShipEngine struct {
 	Symbol       string       `json:"symbol"`
@@ -81,7 +81,7 @@ type ShipEngine struct {
 	Condition    int          `json:"condition"`
 	Integrity    int          `json:"integrity"`
 	Speed        int          `json:"speed"`
-	Requirements Requirements `json:"requirements"`
+	Requirements ShipRequirements `json:"requirements"`
 }
 type ShipCooldown struct {
 	ShipSymbol       string    `json:"shipSymbol"`
@@ -113,7 +113,7 @@ type ShipModules struct {
 	Range        int          `json:"range"`
 	Name         string       `json:"name"`
 	Description  string       `json:"description"`
-	Requirements Requirements `json:"requirements"`
+	Requirements ShipRequirements `json:"requirements"`
 }
 type ShipMounts struct {
 	Symbol       string       `json:"symbol"`
@@ -121,7 +121,7 @@ type ShipMounts struct {
 	Description  string       `json:"description"`
 	Strength     int          `json:"strength"`
 	Deposits     []string     `json:"deposits"`
-	Requirements Requirements `json:"requirements"`
+	Requirements ShipRequirements `json:"requirements"`
 }
 type ShipConditionEvent struct {
 	Symbol      string `json:"symbol"`
