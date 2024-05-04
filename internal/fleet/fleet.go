@@ -96,14 +96,14 @@ type NavigateShipResponse struct {
 	}
 }
 type NavigateShipRequest struct {
-	ShipSymbol string `json:"shipSymbol"`
+	WaypointSymbol string `json:"waypointSymbol"`
 }
 
 func (c *Client) NavigateShip(shipSymbol, waypointSymbol string) (models.ShipFuel, models.ShipNav, error) {
 	url := c.client.Base_url + "/my/ships/" + shipSymbol + "/navigate"
 
 	reqData := NavigateShipRequest{
-		ShipSymbol: shipSymbol,
+		WaypointSymbol: waypointSymbol,
 	}
 	body, err := json.Marshal(reqData)
 	if err != nil {
