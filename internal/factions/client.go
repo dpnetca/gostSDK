@@ -1,4 +1,4 @@
-package agents
+package factions
 
 import (
 	"fmt"

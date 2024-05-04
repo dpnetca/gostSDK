@@ -1,4 +1,4 @@
-package agents
+package contracts
 
 import (
 	"fmt"
@@ -11,7 +11,6 @@ import (
 type Client struct {
 	client *client.Client
 }
-
 
 func New(client *client.Client) *Client {
 	return &Client{client: client}

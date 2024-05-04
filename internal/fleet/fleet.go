@@ -3,64 +3,57 @@ package fleet
 import (
 	"encoding/json"
 	"fmt"
-	"time"
+
+	"github.com/dpnetca/gost/pkg/gostSDK/models"
 )
 
-type Ship struct {
-	Symbol       string           `json:"symbol"`
-	Registration ShipRegistration `json:"registration"`
-	Nav          ShipNav          `json:"nav"`
-	Crew         ShipCrew         `json:"crew"`
-}
-type ShipRegistration struct {
-	Name          string `json:"name"`
-	FactionSymbol string `json:"factionSymbol"`
-	Role          string `json:"role"`
-}
-type ShipNavRouteWaypoint struct {
-	Symbol       string `json:"symbol"`
-	Type         string `json:"type"`
-	SystemSymbol string `json:"systemSymbol"`
-	X            int    `json:"x"`
-	Y            int    `json:"y"`
-}
-type ShipNavRoute struct {
-	Destination   ShipNavRouteWaypoint `json:"destination"`
-	Origin        ShipNavRouteWaypoint `json:"origin"`
-	DepartureTime time.Time            `json:"departureTime"`
-	Arrival       time.Time            `json:"arrival"`
-}
-type ShipNav struct {
-	SystemSymbol   string       `json:"systemSymbol"`
-	WaypointSymbol string       `json:"waypointSymbol"`
-	Route          ShipNavRoute `json:"route"`
-	Status         string       `json:"status"`
-	FlightMode     string       `json:"flightMode"`
-}
-type ShipCrew struct {
-	Current  int    `json:"current"`
-	Required int    `json:"required"`
-	Capacity int    `json:"capacity"`
-	Rotation string `json:"rotation"`
-	Morale   int    `json:"morale"`
-	Wages    int    `json:"wages"`
+type DockShipResponse struct {
+	Data struct {
+		Nav models.ShipNav `json:"nav"`
+	} `json:"data"`
 }
 
-type Meta struct {
-	Total int `json:"total"`
-	Page  int `json:"page"`
-	Limit int `json:"limit"`
+func (c *Client) DockShip(symbol string) (models.ShipNav, error) {
+	url := c.client.Base_url + "/my/ships/" + symbol + "/dock"
+	data, err := c.sendPostRequest(url, nil)
+	if err != nil {
+		return models.ShipNav{}, err
+	}
+
+	var response DockShipResponse
+	if err = json.Unmarshal(data, &response); err != nil {
+		return models.ShipNav{}, err
+	}
+	return response.Data.Nav, nil
+
+}
+
+type GetShipResponse struct {
+	Data models.Ship `json:"data"`
+}
+
+func (c *Client) GetShip(symbol string) (*models.Ship, error) {
+	url := c.client.Base_url + "/my/ships/" + symbol
+	data, err := c.sendGetRequest(url)
+	if err != nil {
+		return nil, err
+	}
+	var response GetShipResponse
+	if err = json.Unmarshal(data, &response); err != nil {
+		return nil, err
+	}
+	return &response.Data, nil
 }
 
 type ListShipsResponse struct {
-	Data []Ship `json:"data"`
-	Meta Meta   `jston:"meta"`
+	Data []models.Ship `json:"data"`
+	Meta models.Meta   `jston:"meta"`
 }
 
 // This will return automatically page through list and return all ships
 // to get a single page of ships use ListShipsByPage
-func (c *Client) ListShips() ([]Ship, error) {
-	var ships []Ship
+func (c *Client) ListShips() ([]models.Ship, error) {
+	var ships []models.Ship
 	page := 1
 	limit := 20
 	for {
@@ -94,19 +87,23 @@ func (c *Client) ListShipsByPage(page int, limit int) (ListShipsResponse, error)
 	return response, nil
 }
 
-type GetShipResponse struct {
-	Data Ship `json:"data"`
+type OrbitShipResponse struct {
+	Data struct {
+		Nav models.ShipNav `json:"nav"`
+	} `json:"data"`
 }
 
-func (c *Client) GetShip(symbol string) (*Ship, error) {
-	url := c.client.Base_url + "/my/ships/" + symbol
-	data, err := c.sendGetRequest(url)
+func (c *Client) OrbitShip(symbol string) (models.ShipNav, error) {
+	url := c.client.Base_url + "/my/ships/" + symbol + "/orbit"
+	data, err := c.sendPostRequest(url, nil)
 	if err != nil {
-		return nil, err
+		return models.ShipNav{}, err
 	}
-	var response GetShipResponse
+
+	var response OrbitShipResponse
 	if err = json.Unmarshal(data, &response); err != nil {
-		return nil, err
+		return models.ShipNav{}, err
 	}
-	return &response.Data, nil
+	return response.Data.Nav, nil
+
 }

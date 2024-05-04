@@ -3,56 +3,19 @@ package system
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 
-	"github.com/dpnetca/gostSDK/internal/meta"
+	"github.com/dpnetca/gost/pkg/gostSDK/models"
 )
 
-type Orbitals struct {
-	Symbol string `json:"symbol"`
-}
-type Faction struct {
-	Symbol string `json:"symbol"`
-}
-type Traits struct {
-	Symbol      string `json:"symbol"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-type Modifiers struct {
-	Symbol      string `json:"symbol"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-}
-type Chart struct {
-	WaypointSymbol string    `json:"waypointSymbol"`
-	SubmittedBy    string    `json:"submittedBy"`
-	SubmittedOn    time.Time `json:"submittedOn"`
-}
-type Waypoint struct {
-	Symbol              string      `json:"symbol"`
-	Type                string      `json:"type"`
-	SystemSymbol        string      `json:"systemSymbol"`
-	X                   int         `json:"x"`
-	Y                   int         `json:"y"`
-	Orbitals            []Orbitals  `json:"orbitals"`
-	Orbits              string      `json:"orbits"`
-	Faction             Faction     `json:"faction"`
-	Traits              []Traits    `json:"traits"`
-	Modifiers           []Modifiers `json:"modifiers"`
-	Chart               Chart       `json:"chart"`
-	IsUnderConstruction bool        `json:"isUnderConstruction"`
-}
-
 type ListWaypointInSystemResponse struct {
-	Data []Waypoint `json:"data"`
-	Meta meta.Meta  `json:"meta"`
+	Data []models.Waypoint `json:"data"`
+	Meta models.Meta       `json:"meta"`
 }
 
 // This will return automatically page through list and return all waypoints in system
 // to get a single page of ships use ListWaypointsInSystemByPage
-func (c *Client) ListWaypointsInSystem(systemSymbol string) ([]Waypoint, error) {
-	var waypoints []Waypoint
+func (c *Client) ListWaypointsInSystem(systemSymbol string) ([]models.Waypoint, error) {
+	var waypoints []models.Waypoint
 	page := 1
 	limit := 20
 	for {

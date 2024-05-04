@@ -7,17 +7,22 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/dpnetca/gostSDK/internal/agents"
-	"github.com/dpnetca/gostSDK/internal/client"
-	"github.com/dpnetca/gostSDK/internal/fleet"
-	"github.com/dpnetca/gostSDK/internal/system"
+	"github.com/dpnetca/gost/pkg/gostSDK/internal/agents"
+	"github.com/dpnetca/gost/pkg/gostSDK/internal/client"
+	"github.com/dpnetca/gost/pkg/gostSDK/internal/contracts"
+	"github.com/dpnetca/gost/pkg/gostSDK/internal/factions"
+	"github.com/dpnetca/gost/pkg/gostSDK/internal/fleet"
+	"github.com/dpnetca/gost/pkg/gostSDK/models"
+	"github.com/dpnetca/gost/pkg/gostSDK/internal/system"
 )
 
 type SpaceTrader struct {
-	Client *client.Client
-	Agents *agents.Client
-	Fleet  *fleet.Client
-	System *system.Client
+	Client    *client.Client
+	Agents    *agents.Client
+	Fleet     *fleet.Client
+	System    *system.Client
+	Contracts *contracts.Client
+	Factions  *factions.Client
 }
 
 func NewSpaceTrader(token string) *SpaceTrader {
@@ -25,12 +30,16 @@ func NewSpaceTrader(token string) *SpaceTrader {
 	agent := agents.New(client)
 	fleet := fleet.New(client)
 	system := system.New(client)
+	contacts := contracts.New(client)
+	factions := factions.New(client)
 
 	return &SpaceTrader{
-		Client: client,
-		Agents: agent,
-		Fleet:  fleet,
-		System: system,
+		Client:    client,
+		Agents:    agent,
+		Fleet:     fleet,
+		System:    system,
+		Contracts: contacts,
+		Factions:  factions,
 	}
 }
 
@@ -80,11 +89,11 @@ type registerNewAgentResponse struct {
 }
 
 type NewAgent struct {
-	Agent agents.Agent `json:"agent"`
+	Agent models.Agent `json:"agent"`
 	// Contract ... `json:"contract"`
 	// Faction ... `json:"faction"`
-	Ship  fleet.Ship `json:"ship"`
-	Token string     `json:"token"`
+	Ship  models.Ship `json:"ship"`
+	Token string      `json:"token"`
 }
 
 func (s SpaceTrader) RegisterNewAgent(faction, symbol, email string) (*NewAgent, error) {
