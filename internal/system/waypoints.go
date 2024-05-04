@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/dpnetca/gost/pkg/gostSDK/models"
+	"github.com/dpnetca/gostSDK/models"
 )
 
 type ListWaypointInSystemResponse struct {

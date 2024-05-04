@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/dpnetca/gost/pkg/gostSDK/internal/client"
+	"github.com/dpnetca/gostSDK/internal/client"
 )
 
 type Client struct {

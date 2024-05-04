@@ -7,13 +7,13 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/dpnetca/gost/pkg/gostSDK/internal/agents"
-	"github.com/dpnetca/gost/pkg/gostSDK/internal/client"
-	"github.com/dpnetca/gost/pkg/gostSDK/internal/contracts"
-	"github.com/dpnetca/gost/pkg/gostSDK/internal/factions"
-	"github.com/dpnetca/gost/pkg/gostSDK/internal/fleet"
-	"github.com/dpnetca/gost/pkg/gostSDK/models"
-	"github.com/dpnetca/gost/pkg/gostSDK/internal/system"
+	"github.com/dpnetca/gostSDK/internal/agents"
+	"github.com/dpnetca/gostSDK/internal/client"
+	"github.com/dpnetca/gostSDK/internal/contracts"
+	"github.com/dpnetca/gostSDK/internal/factions"
+	"github.com/dpnetca/gostSDK/internal/fleet"
+	"github.com/dpnetca/gostSDK/models"
+	"github.com/dpnetca/gostSDK/internal/system"
 )
 
 type SpaceTrader struct {

@@ -7,7 +7,6 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/dpnetca/gost/logger"
 	"golang.org/x/time/rate"
 )
 
@@ -50,26 +49,14 @@ func (c *Client) Send(req *http.Request) (*http.Response, error) {
 			return nil, err
 		}
 	}
-	sendTime := time.Now()
 	resp, err := c.Client.Do(req)
-	elapsed := time.Since(sendTime)
 	if err != nil {
 		return nil, err
 	}
 	normalizedUrl := ReSystem.ReplaceAllString(fmt.Sprintf("%s", resp.Request.URL), `${1}/X1-./${2}`)
 	normalizedUrl = ReWaypoint.ReplaceAllString(normalizedUrl, `${1}/X1-.-./${2}`)
 
-	logger.Debug(
-		"http request done",
-		"URL", resp.Request.URL,
-		"normalizedUrl", normalizedUrl,
-		"requestBody", resp.Request.Body,
-		"requestMethod", resp.Request.Method,
-		"statusCode", resp.StatusCode,
-		"responseTime", elapsed.Milliseconds(),
-	)
 	if resp.StatusCode == 429 {
-		logger.Warn("rate limited", "headers", resp.Header)
 		// TODO: change sleep...maybe exponetial backoff...
 		time.Sleep(1 * time.Second)
 		resp, err = c.Send(req)
