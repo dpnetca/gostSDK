@@ -1,6 +1,7 @@
 package fleet
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 
@@ -85,6 +86,39 @@ func (c *Client) ListShipsByPage(page int, limit int) (ListShipsResponse, error)
 		return ListShipsResponse{}, err
 	}
 	return response, nil
+}
+
+type NavigateShipResponse struct {
+	Data struct {
+		Fuel   models.ShipFuel
+		Nav    models.ShipNav
+		Events []models.ShipConditionEvent
+	}
+}
+type NavigateShipRequest struct {
+	ShipSymbol string `json:"shipSymbol"`
+}
+
+func (c *Client) NavigateShip(shipSymbol, waypointSymbol string) (models.ShipFuel, models.ShipNav, error) {
+	url := c.client.Base_url + "/my/ships/" + shipSymbol + "/navigate"
+
+	reqData := NavigateShipRequest{
+		ShipSymbol: shipSymbol,
+	}
+	body, err := json.Marshal(reqData)
+	if err != nil {
+		return models.ShipFuel{}, models.ShipNav{}, err
+	}
+	data, err := c.sendPostRequest(url, bytes.NewBuffer(body))
+	if err != nil {
+		return models.ShipFuel{}, models.ShipNav{}, err
+	}
+
+	var response NavigateShipResponse
+	if err = json.Unmarshal(data, &response); err != nil {
+		return models.ShipFuel{}, models.ShipNav{}, err
+	}
+	return response.Data.Fuel, response.Data.Nav, nil
 }
 
 type OrbitShipResponse struct {
