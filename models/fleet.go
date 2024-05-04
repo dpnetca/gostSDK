@@ -41,4 +41,13 @@ type ShipCrew struct {
 	Morale   int    `json:"morale"`
 	Wages    int    `json:"wages"`
 }
-
+type ShipCargo struct {
+	Capacity  int `json:"capacity"`
+	Units     int `json:"units"`
+	Inventory []struct {
+		Symbol      string `json:"symbol"`
+		Name        string `json:"name"`
+		Description string `json:"description"`
+		Units       int    `json:"units"`
+	} `json:"inventory"`
+}
